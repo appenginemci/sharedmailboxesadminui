@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <servlet>
+    <servlet-name>HomePage</servlet-name>
+    <jsp-file>/jsps/admin.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HomePage</servlet-name>
+    <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>AddEventPage</servlet-name>
+    <jsp-file>/jsps/addevent.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddEventPage</servlet-name>
+    <url-pattern>/addEvent</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>add</servlet-name>
+    <servlet-class>com.mcigroup.eventmanager.front.servlet.AddServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>add</servlet-name>
+    <url-pattern>/add</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>modifyEvent</servlet-name>
+    <jsp-file>/jsps/modifyevent.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>modifyEvent</servlet-name>
+    <url-pattern>/modifyEvent</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>modify</servlet-name>
+    <servlet-class>com.mcigroup.eventmanager.front.servlet.ModifyServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>modify</servlet-name>
+    <url-pattern>/modify</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>UnauthorizedPage</servlet-name>
+    <jsp-file>/jsps/unauthorized.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UnauthorizedPage</servlet-name>
+    <url-pattern>/unauthorized</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AdministrationPage</servlet-name>
+    <jsp-file>/jsps/admin.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdministrationPage</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AuthenticationServlet</servlet-name>
+    <servlet-class>com.mcigroup.eventmanager.front.servlet.AuthenticationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AuthenticationServlet</servlet-name>
+    <url-pattern>/authorization</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DataServlet</servlet-name>
+    <servlet-class>com.mcigroup.eventmanager.front.servlet.DataServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DataServlet</servlet-name>
+    <url-pattern>/data</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+      <welcome-file>AuthenticationServlet</welcome-file>
+  </welcome-file-list>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>any</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <display-name>Restrict access to unauthorized users</display-name>
+    <web-resource-collection>
+      <web-resource-name>Restricted Pages</web-resource-name>
+      <url-pattern>/modifyEvent</url-pattern>
+      <url-pattern>/addEvent</url-pattern>
+      <url-pattern>/home</url-pattern>
+      <url-pattern>/unauthorized</url-pattern>
+      <url-pattern>/jsps/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint/>
+  </security-constraint>
+  <servlet>
+    <servlet-name>jersey-serlvet</servlet-name>
+
+    <servlet-class>
+        com.sun.jersey.spi.container.servlet.ServletContainer
+    </servlet-class>
+
+    <init-param>
+        <param-name>com.sun.jersey.config.property.packages</param-name>
+        <param-value>com.mcigroup.eventmanager.front.rest</param-value>
+    </init-param>
+
+    <init-param>
+        <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+        <param-value>true</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>jersey-serlvet</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
+</servlet-mapping>
+</web-app>
