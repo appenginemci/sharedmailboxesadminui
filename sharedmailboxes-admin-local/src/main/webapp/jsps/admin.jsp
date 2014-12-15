@@ -70,7 +70,7 @@
 			<tbody>
      			<tr ng-repeat="row in events" >
 					<td>{{row.name}}</td>
-					<td>{{row.eventFolderId}}</td>
+					<td>{{row.type}}</td>
 					<td>
 					<button type="submit" ng-click="submit(row)">Manage</button>
 					</td>

@@ -39,6 +39,7 @@ public class EventDao {
 							.getString("eventName"));
 					event.setGroupId(resultSet
 							.getString("googleGroupId"));
+					event.setType(resultSet.getString("evtType"));
 					events.add(event);
 				}
 			} finally {
