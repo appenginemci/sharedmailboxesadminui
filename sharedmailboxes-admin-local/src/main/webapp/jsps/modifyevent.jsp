@@ -65,49 +65,63 @@
 			<div class="col-md-6">
 				<h2>Management of event : {{event.name}}</h2>
 				<table class="table table-striped" ng-show="event.users.length > 0">
-				<thead>
-					<tr>
-						<th>User</th>
-						<th>Type</th>
-						<th>Cancel</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="rowUser in event.users">
-						<td>{{rowUser.mail}}</td>
-						<td>{{rowUser.role}}</td>
-						<td><button class="btn btn-default" ng-click="removeUser(rowUser, $index)"><span class="glyphicon glyphicon-remove" ></span></button></td>
-					</tr>
-				</tbody>
-			</table>
-			
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Type</th>
+							<th>Cancel</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="rowUser in event.users">
+							<td>{{rowUser.mail}}</td>
+							<td>{{rowUser.role}}</td>
+							<td><button class="btn btn-default"
+									ng-click="removeUser(rowUser, $index)">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button></td>
+						</tr>
+					</tbody>
+				</table>
+
 			</div>
 			<div class="col-md-6">
-			<fieldset><legend>Add a member</legend>
-			<div class="form-group">
-				<label for="userMail">User</label>
-				<input type="text" class="form-control" id="userMail" ng-model="user.mail" placeholder="User mail" typeahead="mail for mail in allUsers | filter:$viewValue | limitTo:8"/>
+				<fieldset>
+					<legend>Add a member</legend>
+					<div class="form-group">
+						<label for="userMail">User</label> <input type="text"
+							class="form-control" id="userMail" ng-model="user.mail"
+							placeholder="User mail"
+							typeahead="mail for mail in allUsers | filter:$viewValue | limitTo:8" />
+					</div>
+					<div class="form-group">
+						<label for="userRole">Role</label> <select class="form-control"
+							ng-model="user.role" id="userRole">
+							<option value="teamMember" selected>Team Member</option>
+							<option value="eventHead">Event Head</option>
+							<option value="poolHead">Pool Head</option>
+						</select>
+
+					</div>
+					<div class="form-group">
+						<button type="button" class="btn btn-primary"
+							ng-click="addUser(user)">Add User</button>
+					</div>
+				</fieldset>
 			</div>
-			<div class="form-group">
-				<label for="userRole">Role</label>
-				<select class="form-control" ng-model="user.role" id="userRole">
-    				<option value="teamMember" selected>Team Member</option>
-    				<option value="eventHead">Event Head</option>
-    				<option value="poolHead">Pool Head</option>
-    			</select>
-				
-			</div>
-			<div class="form-group">
-				<button type="button" class="btn btn-primary" ng-click="addUser(user)">Add User</button>
-			</div>
-			</fieldset>
+
+			<div class="col-md-12">
+				<button type="submit" class="btn btn-default"
+					ng-click="updEvt(event)">Update Event</button>
 			</div>
 			
 			<div class="col-md-12">
-				<button type="submit" class="btn btn-default" ng-click="updEvt(event)">Update Event</button>
+				<br /> <br /> 
+				<a type="button" ng-href="/">Back to main page</a>
 			</div>
-	  </form>
+		</form>
 	</div>
+	
 
 </body>
 </html>
