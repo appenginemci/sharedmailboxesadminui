@@ -191,6 +191,7 @@ public class DriveAPIService {
 			results.put("folderId", "");
 		}
 		shareOutboxTmpFolderWithUsers(eventToCreate.getUsers(), messages);
+		
 		if (!messages.isEmpty()) {
 			results.put("status", "failure");
 		} else {
@@ -206,7 +207,7 @@ public class DriveAPIService {
 	 */
 	public static void removeFolderStructure(String folderId) {
 		try {
-			drive.files().delete(folderId);
+			drive.files().delete(folderId).execute();
 			System.err.println("Folder created on drive has been removed");
 		} catch (IOException e) {
 			System.err
