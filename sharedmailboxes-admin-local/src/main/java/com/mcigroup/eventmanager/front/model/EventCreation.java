@@ -7,6 +7,10 @@ import com.google.gson.annotations.Expose;
 
 public class EventCreation {
 	@Expose
+	private String site_id;
+	@Expose
+	private String site_folder_id;
+	@Expose
 	private String name;
 	@Expose
 	private String type;
@@ -20,6 +24,22 @@ public class EventCreation {
 	private String attachmentsFolderId;
 	private String groupId;
 	private int dbId;
+	
+	
+
+	public String getSite_id() {
+		return site_id;
+	}
+	public void setSite_id(String site) {
+		this.site_id = site;
+	}
+
+	public String getSiteFolder_id() {
+		return site_folder_id;
+	}
+	public void setSiteFolder_id(String site_folder_id) {
+		this.site_folder_id = site_folder_id;
+	}
 	
 	public String getName() {
 		return name;

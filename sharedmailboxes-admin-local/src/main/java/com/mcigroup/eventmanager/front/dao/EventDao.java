@@ -93,7 +93,7 @@ public class EventDao {
 		int lastInsertId = 0;
 		try {
 			try {
-				String statement = "INSERT INTO event(eventName,googleGroupId,folderId,email,inboxNewFolderId,attachmentFolderId,closedFolderId,site_id,evtType) VALUES  (?,?,?,?,?,?,?,1,?)";
+				String statement = "INSERT INTO event(eventName,googleGroupId,folderId,email,inboxNewFolderId,attachmentFolderId,closedFolderId,site_id,evtType) VALUES  (?,?,?,?,?,?,?,?,?)";
 				PreparedStatement stmt;
 
 				stmt = conn.prepareStatement(statement);
@@ -104,7 +104,8 @@ public class EventDao {
 				stmt.setString(5, eventToCreate.getNewFolderId());
 				stmt.setString(6, eventToCreate.getAttachmentsFolderId());
 				stmt.setString(7, eventToCreate.getClosedFolderId());
-				stmt.setString(8, eventToCreate.getType());
+				stmt.setString(8, eventToCreate.getSite_id());
+				stmt.setString(9, eventToCreate.getType());
 //				System.err.println("in getEventByUser with User id = " + user.getId());
 				int result = stmt.executeUpdate();
 				if(result == 1) {

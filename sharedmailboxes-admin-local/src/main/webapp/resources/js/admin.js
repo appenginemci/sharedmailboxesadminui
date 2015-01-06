@@ -33,22 +33,29 @@ app.factory("services", ['$http', function($http) {
     obj.getUserAndEvent = function(groupId){
         return $http.get('/data?type=getUserAndEvent&groupId='+groupId);
     };
+    
+    obj.getAllSites = function(){
+        return $http.get('/data?type=getAllSites');
+    };
+
+    
     return obj;   
 }]);
 
 
-app.controller('listCtrl', function ($scope, $filter, services) {
-	
+app.controller('listCtrl', function($scope, $filter, services) {
+
 	services.getEvents().success(function(data) {
 		console.log(data);
 		$scope.events = data;
-    });
-	
+	});
+
 	$scope.submit = function(row) {
 		console.log(row);
 		$("#groupId").val(row.groupId);
 		$("#formList").submit();
 	}
+
 });
 
 app.controller('addEvt', function ($scope, $filter, services) {
@@ -62,7 +69,18 @@ app.controller('addEvt', function ($scope, $filter, services) {
 	                          	{'name': 'Congress',
 	                          	'value': 'congress'}
 	                          ];
+	
 	$scope.event.type = $scope.eventTypes[1].value;
+	
+	
+	services.getAllSites().success(function(data) {
+		console.log(data);
+		$scope.eventSites = data;
+    });
+	
+//	$scope.event.site = $scope.eventSites[0].folder_id;
+	
+
 	$scope.userRoles = [
 	                          	{
 	                          		'name': 'Team Member',
@@ -95,11 +113,13 @@ app.controller('addEvt', function ($scope, $filter, services) {
 			if(data.status == "failure") {
 				displayAlert('danger', data.messages);
 			} else if (data.status == "success") {
-				displayAlert('info', ["Event correctly created"]);
+				displayAlert('info', ['Event correctly created']);
 				$scope.users = [];
 				$scope.event = {};
 			}
 		});
+		
+		
 	}
 	
 	$scope.addUser = function() {
@@ -222,7 +242,7 @@ app.controller('modifyEvt', function ($scope, $filter, services) {
 			if(data.status == "failure") {
 				displayAlert('danger', data.messages);
 			} else if (data.status == "success") {
-				displayAlert('info', ["Event correctly updated"]);
+				displayAlert('info', ['Event correctly updated']);
 			}
 		});
 	}
@@ -234,6 +254,7 @@ app.controller('modifyEvt', function ($scope, $filter, services) {
 			if(data == 'true') {
 				if(!alreadyInTable($scope.user.mail)) {
 					$scope.event.users.push({'mail':$scope.user.mail,'role':$scope.user.role});
+					displayAlert('info', ['User correctly added']);
 				}
 			} else {
 				displayAlert('danger', ['The user does not exist in the group domain']);

@@ -65,28 +65,35 @@
 		<form novalidate>
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="eventSite">Event Site</label>
-					<select class="form-control" ng-model="event.site" id="eventSiteList" ng-options="template.value as template.site for template in eventSites"></select>
+					<label for="eventSite">Event Site</label><br/>
+					
+					<select class="form-control" ng-model="event.site_folder_id" id="eventSiteList" ng-options="template.folder_id as template.name for template in eventSites"></select>
 
-					<a href="" ng-click="settings.addContact()">New site</a>
-					<input type="text" class="form-control" id="eventSiteInput" ng-model="event.site" placeholder="Event Site" ng-blur="checkEventSite(event)"/>
+<!-- 					<a href="" ng-click="settings.addContact()">New site</a> -->
+
+<!-- 					<input type="text" class="form-control" id="eventSiteInput" ng-model="event.site" placeholder="Event Site" ng-blur="checkEventSite(event)"/> -->
 				</div>
+				
 				<div class="form-group">
 					<label for="eventName">Event Name</label>
 					<input type="text" class="form-control" id="eventName" ng-model="event.name" placeholder="Event Name" ng-blur="checkEventName(event)"/>
 				</div>
+				
 				<div class="form-group">
 					<label for="eventType">Event Type</label>
 					<select class="form-control" ng-model="event.type" id="eventType" ng-options="template.value as template.name for template in eventTypes">
 	    			</select>
 				</div>
+				
 				<div class="form-group">
 					<label for="eventAddress">Event Mail Prefix</label>
 					<input type="text" class="form-control" id="eventAddress" ng-model="event.mail" placeholder="Event.Name" ng-blur="checkEventMail(event)"/><span>@<%= PropertiesManager.getProperty("domain") %></span>
 				</div>
+				
 				<div class="form-group">
 					<button type="submit" class="btn btn-default" ng-click="addEvt(event)">Submit</button>
 				</div>
+				
 				<div>
 					<br /> <br /> <a ng-href="/">Back to main page</a>
 				</div>

@@ -42,6 +42,9 @@ public class EventCreationService {
 	private static HashMap<String, Object> checkAllFields(EventCreation eventToCreate) {
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<String> messages = new ArrayList<String>();
+		if(StringUtils.isBlank(eventToCreate.getSiteFolder_id())) {
+			messages.add("The Event Site is mandatory");
+		}
 		if(StringUtils.isBlank(eventToCreate.getName())) {
 			messages.add("Event Name is mandatory");
 		} else {
@@ -101,7 +104,9 @@ public class EventCreationService {
 				DirectoryAPIService.removeGroup(eventToCreate.getGroupId());
 				return Tools.gson.toJson(checks);
 			}
+			
 		checks = DriveAPIService.createFolderStructure(eventToCreate);
+		
 		if ("failure".equals(checks.get("status"))) {
 			if(!StringUtils.isBlank(checks.get("folderId").toString())) {
 				DriveAPIService.removeFolderStructure(checks.get("folderId").toString());
@@ -235,6 +240,7 @@ public class EventCreationService {
 			results.put("messages", messages);
 		} else {
 			results.put("status", "success");
+			messages.add("Modification correctly made");
 		}
 		return results;
 	}
@@ -251,6 +257,7 @@ public class EventCreationService {
 				return (List<String>) (checks.get("messages"));
 			} else {
 				createUserIfNeeded(eventToUpdate, messages);
+//				messages.add("User properly added to the Event");
 			}
 		}
 		return messages;
@@ -264,6 +271,7 @@ public class EventCreationService {
 				return (List<String>) (checks.get("messages"));
 			} else {
 				updateUsersInDB(eventToUpdate, messages);
+//				messages.add("User properly updated for the Event");
 			}
 		return messages;
 	}
@@ -280,6 +288,7 @@ public class EventCreationService {
 				return (List<String>) (checks.get("messages"));
 			} else {
 				removeUsersInDB(eventToUpdate, messages);
+//				messages.add("User properly removed from the Event");
 			}
 		}
 		return messages;
@@ -337,6 +346,10 @@ public class EventCreationService {
 			results.put("messages", messages);
 			return Tools.gson.toJson(results);
 		}
+		
+		messages.add("Event properly updated");
+		results.put("status", "success");
+		results.put("messages", messages);
 		
 		return null;
 		

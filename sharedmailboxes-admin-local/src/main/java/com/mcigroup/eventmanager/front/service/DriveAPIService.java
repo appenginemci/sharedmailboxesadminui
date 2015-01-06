@@ -8,14 +8,18 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.api.services.admin.directory.model.User;
+import com.google.api.services.admin.directory.model.Users;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.model.Permission;
 import com.google.api.services.drive.model.PermissionList;
 import com.mcigroup.eventmanager.front.helper.PropertiesManager;
+import com.mcigroup.eventmanager.front.helper.Tools;
 import com.mcigroup.eventmanager.front.model.EventCreation;
 import com.mcigroup.eventmanager.front.model.EventTypeEnum;
 import com.mcigroup.eventmanager.front.model.UserCreation;
@@ -171,10 +175,15 @@ public class DriveAPIService {
 			EventCreation eventToCreate) {
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<String> messages = new ArrayList<String>();
-		String rootEventFolderId = PropertiesManager
-				.getProperty("root_event_folder_id");
+		
+		// GLA : make the following dynamic
+//		String rootEventFolderId = PropertiesManager
+//				.getProperty("root_event_folder_id");
+		String rootEventFolderId = eventToCreate.getSiteFolder_id();
+		
 		String eventFolderId = createFolder(eventToCreate.getName(),
 				rootEventFolderId, messages);
+		
 		if (StringUtils.isNotBlank(eventFolderId)) {
 			results.put("folderId", eventFolderId);
 			eventToCreate.setEventFolderId(eventFolderId);
@@ -550,5 +559,4 @@ public class DriveAPIService {
 		results.put("messages", messages);
 		return results;
 	}
-
 }

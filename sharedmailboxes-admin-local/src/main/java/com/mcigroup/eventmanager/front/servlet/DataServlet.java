@@ -95,7 +95,13 @@ public class DataServlet  extends HttpServlet {
 								PrintWriter out = resp.getWriter();
 								out.print(toReturn);
 								out.flush();
-							}
+							} else if ("getAllSites".equals(type)) {
+								toReturn = DataManager.getAllSites();
+								resp.setContentType("application/json");
+								PrintWriter out = resp.getWriter();
+								out.print(toReturn);
+								out.flush();
+							} 
 						}
 						
 					}
