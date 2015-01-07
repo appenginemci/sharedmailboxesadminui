@@ -1,10 +1,18 @@
 package com.mcigroup.eventmanager.front.business;
 
-import com.google.appengine.api.users.UserService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.mcigroup.eventmanager.front.dao.SiteDao;
 import com.mcigroup.eventmanager.front.helper.Tools;
 import com.mcigroup.eventmanager.front.model.EventCreation;
+import com.mcigroup.eventmanager.front.model.Site;
 import com.mcigroup.eventmanager.front.model.UserCreation;
 import com.mcigroup.eventmanager.front.service.DirectoryAPIService;
+import com.mcigroup.eventmanager.front.service.DriveAPIService;
 import com.mcigroup.eventmanager.front.service.EventCreationService;
 import com.mcigroup.eventmanager.front.service.EventService;
 import com.mcigroup.eventmanager.front.service.SiteService;
@@ -44,21 +52,88 @@ public class DataManager {
 		return SiteService.getAllSites();
 	}
 	
-	public static<T> String checkEventSite(String eventSite){
-//		return DirectoryAPIService.isEventSiteAvailable(eventSite);
-	    // TODO: implement this method
-		return null;
+	public static<T> HashMap<String, Object> checkEventSite(String newSite){
+	    HashMap<String, Object> results = new HashMap<String, Object>();
+		ArrayList<String> messages = new ArrayList<String>();
+		
+		if(StringUtils.isBlank(newSite) || newSite.equals("undefined")) {
+		    messages.add("The New Site name is mandatory");
+		}
+		
+		// The new site must not already exists
+		SiteDao siteDao = new SiteDao();
+		Collection<Site> existingSites = siteDao.getAllSites();
+		for (Site i_siteName : existingSites) {
+		    if (newSite.equals(i_siteName.getName())) {
+			messages.add("A site with the same name already exists");
+		    }
+		}
+		
+		if(messages.isEmpty()) {
+			results.put("status", "success");
+		} else {
+			results.put("status", "failure");
+			results.put("messages", messages);
+		}
+		return results;
 	}
+	
+            public static <T> String createNewSite(String newSite) {
+        	HashMap<String, Object> checks = checkEventSite(newSite);
+        	if ("failure".equals(checks.get("status"))) {
+        	    return Tools.gson.toJson(checks);
+        	}
+        	else {
+        
+        	    // Create the new site Drive Folder
+        	    ArrayList<String> messages = new ArrayList<String>();
+        	    String newSiteGoogleID = DriveAPIService.createNewSite(newSite, messages);
+        
+        	    if (newSiteGoogleID.isEmpty()) {
+        		checks.put("status", "failure");
+        		checks.put("messages", messages);
+        		return Tools.gson.toJson(checks);
+        	    }
+        	    else {
+        		// Insert the new Site in DB
+        		SiteDao siteDao = new SiteDao();
+        		int SQLresultCode = siteDao.createSite(newSite, newSiteGoogleID);
+        		
+        		if(SQLresultCode != 0) {
+        		    checks.put("status", "success");
+        		    checks.put("newSiteGoogleID", newSiteGoogleID);
+        		} else {
+        		    // Rollback on site drive folder creation
+            		    DriveAPIService.removeFolderStructure(newSiteGoogleID);
+
+            		    checks.put("status", "failure");
+        		    messages.add("error during DB SQL site creation");
+            		    checks.put("messages", messages);
+        		}
+        
+        	    }
+        	    return Tools.gson.toJson(checks);
+        	}
+            }
+	
+	
 	
 	public static<T> String checkEventMailPrefix(String eventMailPrefix){
 		return DirectoryAPIService.isEventMailPrefixAvailable(eventMailPrefix);
 	}
 	
 	public static<T> String addEvent(String event){
+	    
 		System.err.println(event);
 		EventCreation eventToCreate = Tools.gson.fromJson(event, EventCreation.class);
-		System.err.println("Event site ID = " + eventToCreate.getSite_id());
-		System.err.println("Event site folder ID = " + eventToCreate.getSiteFolder_id());
+
+		String siteFolderID = "";
+		if (eventToCreate.getSite() != null) {
+			Site siteOfEvent = eventToCreate.getSite();
+			siteFolderID = siteOfEvent.getFolder_id();
+		}		
+		
+		System.err.println("Event site folder ID = " + siteFolderID);
 		System.err.println("Event name = " + eventToCreate.getName());
 		System.err.println("Event mail = " + eventToCreate.getMail());
 		System.err.println("Event type = " + eventToCreate.getType());
@@ -76,7 +151,7 @@ public class DataManager {
 	public static<T> String updEvent(String event){
 		System.err.println(event);
 		EventCreation eventToUpdate = Tools.gson.fromJson(event, EventCreation.class);
-		System.err.println("Event site ID = " + eventToUpdate.getSite_id());
+//		System.err.println("Event site ID = " + eventToUpdate.getSite_id());
 		System.err.println("Event name = " + eventToUpdate.getName());
 		System.err.println("Event mail = " + eventToUpdate.getMail());
 		System.err.println("Event type = " + eventToUpdate.getType());

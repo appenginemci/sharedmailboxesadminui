@@ -65,13 +65,24 @@
 		<form novalidate>
 			<div class="col-md-6">
 				<div class="form-group">
-					<label for="eventSite">Event Site</label><br/>
+				
+					<table style="width:100%">
+						<tr>
+							<td width="50%"><label for="eventSite">Event Site</label></td>
+							<td width="25%"><input maxlength="30" type="text" class="form-control" id="newEventSiteInput" ng-model="newSite"
+								placeholder="New Site" /></td>
+							<td width="25%"><button type="submit" class="btn btn-primary" ng-click="createNewSite(newSite)">
+							Create New Site</button></td>
+						</tr>
+						<tr>
+							<td colspan="3">
+							<select class="form-control"
+								ng-model="event.site" id="eventSiteList"
+								ng-options="template as template.name for template in eventSites"></select>
+							</td>
+						</tr>
+					</table>
 					
-					<select class="form-control" ng-model="event.site_folder_id" id="eventSiteList" ng-options="template.folder_id as template.name for template in eventSites"></select>
-
-<!-- 					<a href="" ng-click="settings.addContact()">New site</a> -->
-
-<!-- 					<input type="text" class="form-control" id="eventSiteInput" ng-model="event.site" placeholder="Event Site" ng-blur="checkEventSite(event)"/> -->
 				</div>
 				
 				<div class="form-group">

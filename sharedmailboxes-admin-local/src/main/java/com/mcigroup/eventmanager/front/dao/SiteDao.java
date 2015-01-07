@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.mcigroup.eventmanager.front.helper.ConnectionUtil;
-import com.mcigroup.eventmanager.front.helper.PropertiesManager;
-import com.mcigroup.eventmanager.front.model.EventCreation;
 import com.mcigroup.eventmanager.front.model.Site;
 
 public class SiteDao {
@@ -21,7 +19,7 @@ public class SiteDao {
 	List<Site> siteList = new ArrayList<Site>();
 	try {
 	    try {
-		String statement = "SELECT * FROM site";
+		String statement = "SELECT * FROM site order by name asc";
 		PreparedStatement stmt;
 
 		stmt = conn.prepareStatement(statement);
@@ -33,7 +31,7 @@ public class SiteDao {
 		    site.setID(resultSet.getInt("id"));
 		    site.setName(resultSet.getString("name"));
 		    site.setFolder_id(resultSet.getString("folder_id"));
-		    site.setCreation_date(resultSet.getDate("creation_date"));
+//		    site.setCreation_date(resultSet.getDate("creation_date"));
 
 		    siteList.add(site);
 		}
@@ -51,4 +49,28 @@ public class SiteDao {
 	return siteList;
     }
 
+    public int createSite(String siteName, String siteFolderID) {
+	System.out.println("in createSite SQL method");
+	Connection conn = ConnectionUtil.getConnection();
+	int result = 0;
+	try {
+		try {
+			String statement = "INSERT INTO site(name, folder_id, creation_date)  VALUES  (?,?, CURRENT_DATE)";
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(statement);
+			stmt.setString(1, siteName);
+			stmt.setString(2, siteFolderID);
+
+			result = stmt.executeUpdate();
+			 
+		} finally {
+			conn.close();
+		}
+	} catch (SQLException e1) {
+		System.err.println("SQL error :" + e1);
+	}
+	return result;
+}
+    
 }

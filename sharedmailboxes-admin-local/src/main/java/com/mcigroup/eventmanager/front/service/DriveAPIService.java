@@ -8,20 +8,17 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.api.services.admin.directory.model.User;
-import com.google.api.services.admin.directory.model.Users;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.model.Permission;
 import com.google.api.services.drive.model.PermissionList;
 import com.mcigroup.eventmanager.front.helper.PropertiesManager;
-import com.mcigroup.eventmanager.front.helper.Tools;
 import com.mcigroup.eventmanager.front.model.EventCreation;
 import com.mcigroup.eventmanager.front.model.EventTypeEnum;
+import com.mcigroup.eventmanager.front.model.Site;
 import com.mcigroup.eventmanager.front.model.UserCreation;
 import com.mcigroup.eventmanager.front.model.UserRoleEnum;
 import com.mcigroup.eventmanager.front.security.CredentialLoader;
@@ -69,6 +66,34 @@ public class DriveAPIService {
 		}
 		return toReturn;
 	}
+	
+        /**
+         * createNewSite create a folder on Drive in Root
+         * 
+         * @param folderName
+         *            the name of the folder to create
+         * @param messages
+         *            error messages
+         * @return the id of the created folder, or empty String;
+         */
+        public static String createNewSite(String folderName, List<String> messages) {
+        	String toReturn = "";
+        	File eventFolder = new File();
+        	eventFolder.setTitle(folderName);
+        	eventFolder.setMimeType("application/vnd.google-apps.folder");
+
+        	try {
+        	    File createdFolder = drive.files().insert(eventFolder).execute();
+        	    toReturn = createdFolder.getId();
+        	}
+        	catch (IOException e) {
+        	    System.err.println("Error when trying to create the new drive folder : " + folderName);
+        	    messages.add("Error when trying to create the new drive folder : " + folderName
+        		    + "/ Here is the error message: " + e);
+        	    e.printStackTrace();
+        	}
+        	return toReturn;
+        }
 	
 	/**
 	 * unshareFolderWithUsers : When removing a user, remove the permission to see the event for the removed user
@@ -176,10 +201,8 @@ public class DriveAPIService {
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<String> messages = new ArrayList<String>();
 		
-		// GLA : make the following dynamic
-//		String rootEventFolderId = PropertiesManager
-//				.getProperty("root_event_folder_id");
-		String rootEventFolderId = eventToCreate.getSiteFolder_id();
+		Site siteOfEvent = eventToCreate.getSite();
+		String rootEventFolderId = siteOfEvent.getFolder_id();
 		
 		String eventFolderId = createFolder(eventToCreate.getName(),
 				rootEventFolderId, messages);

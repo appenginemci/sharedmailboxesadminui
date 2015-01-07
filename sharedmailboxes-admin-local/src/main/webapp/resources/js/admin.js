@@ -37,6 +37,10 @@ app.factory("services", ['$http', function($http) {
     obj.getAllSites = function(){
         return $http.get('/data?type=getAllSites');
     };
+    
+    obj.createNewSite = function(newSite){
+        return $http.get('/data?type=createNewSite&newSite='+newSite);
+    };
 
     
     return obj;   
@@ -80,7 +84,6 @@ app.controller('addEvt', function ($scope, $filter, services) {
 	
 //	$scope.event.site = $scope.eventSites[0].folder_id;
 	
-
 	$scope.userRoles = [
 	                          	{
 	                          		'name': 'Team Member',
@@ -118,8 +121,6 @@ app.controller('addEvt', function ($scope, $filter, services) {
 				$scope.event = {};
 			}
 		});
-		
-		
 	}
 	
 	$scope.addUser = function() {
@@ -139,6 +140,28 @@ app.controller('addEvt', function ($scope, $filter, services) {
 	
 	$scope.removeUser = function(rowUser, index) {
 		$scope.users.splice(index, 1);
+	}
+	
+	$scope.createNewSite = function() {
+		console.log("new site = " + $scope.newSite);
+		
+				services.createNewSite(encodeURIComponent(($scope.newSite))).success(function(data) {
+					
+					if(data.status == "failure") {
+						console.log("error on new site creation");
+						displayAlert('danger', data.messages);
+					} else if (data.status == "success") {
+						console.log("New site creation -OK-");
+						
+						// Update of the site list
+						services.getAllSites().success(function(data) {
+							console.log(data);
+							$scope.eventSites = data;
+					    });
+						
+						displayAlert('info', ['New Site correctly created']);
+					}
+				});
 	}
 	
 	$scope.checkEventName = function() {

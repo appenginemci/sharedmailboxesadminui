@@ -25,7 +25,7 @@ public class DataServlet  extends HttpServlet {
 
 		UserService userService = UserServiceFactory.getUserService();
 		String type = req.getParameter("type");
-
+		
 		if (req.getUserPrincipal() != null) {
 			if (req.getUserPrincipal() != null) {
 				if(userService.getCurrentUser() != null){
@@ -37,14 +37,14 @@ public class DataServlet  extends HttpServlet {
 							if("getEvents".equals(type)) {
 //								UserService userService = UserServiceFactory.getUserService();
 //								if(userService.getCurrentUser() != null){
-//									String userEmail = userService.getCurrentUser().getEmail();
+//								String userEmail = userService.getCurrentUser().getEmail();
 									
-									
-										toReturn = DataManager.getAllEvents();
-										resp.setContentType("application/json");
-										PrintWriter out = resp.getWriter();
-										out.print(toReturn);
-										out.flush();
+								toReturn = DataManager.getAllEvents();
+								resp.setContentType("application/json");
+								PrintWriter out = resp.getWriter();
+								out.print(toReturn);
+								out.flush();
+								
 //								}
 							} else if ("getAllUsers".equals(type)) {
 								toReturn = DataManager.getAllUsers();
@@ -101,7 +101,15 @@ public class DataServlet  extends HttpServlet {
 								PrintWriter out = resp.getWriter();
 								out.print(toReturn);
 								out.flush();
-							} 
+							} else if ("createNewSite".equals(type)) {
+							    	String newSiteToCreate = req.getParameter("newSite");
+							    	System.out.println("new site : " + newSiteToCreate);
+								toReturn = DataManager.createNewSite(newSiteToCreate);
+								resp.setContentType("application/json");
+								PrintWriter out = resp.getWriter();
+								out.print(toReturn);
+								out.flush();
+							}  
 						}
 						
 					}

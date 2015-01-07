@@ -7,14 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 
 import com.google.api.services.admin.directory.model.User;
 import com.mcigroup.eventmanager.front.dao.EventDao;
 import com.mcigroup.eventmanager.front.dao.UserDao;
 import com.mcigroup.eventmanager.front.helper.Tools;
 import com.mcigroup.eventmanager.front.model.EventCreation;
-import com.mcigroup.eventmanager.front.model.EventTypeEnum;
 import com.mcigroup.eventmanager.front.model.UserCreation;
 
 public class EventCreationService {
@@ -42,7 +40,7 @@ public class EventCreationService {
 	private static HashMap<String, Object> checkAllFields(EventCreation eventToCreate) {
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		ArrayList<String> messages = new ArrayList<String>();
-		if(StringUtils.isBlank(eventToCreate.getSiteFolder_id())) {
+		if(eventToCreate.getSite() == null) {
 			messages.add("The Event Site is mandatory");
 		}
 		if(StringUtils.isBlank(eventToCreate.getName())) {

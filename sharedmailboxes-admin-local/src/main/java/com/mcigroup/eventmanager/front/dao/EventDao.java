@@ -11,6 +11,7 @@ import java.util.List;
 import com.mcigroup.eventmanager.front.helper.ConnectionUtil;
 import com.mcigroup.eventmanager.front.helper.PropertiesManager;
 import com.mcigroup.eventmanager.front.model.EventCreation;
+import com.mcigroup.eventmanager.front.model.Site;
 
 public class EventDao {
 	
@@ -46,7 +47,7 @@ public class EventDao {
 				conn.close();
 			}
 		} catch (SQLException e1) {
-			System.err.println("connection error");
+			System.err.println(e1);
 		}
 		return events;
 	}
@@ -83,7 +84,7 @@ public class EventDao {
 				conn.close();
 			}
 		} catch (SQLException e1) {
-			System.err.println("connection error");
+			System.err.println(e1);
 		}
 		return null;
 	}
@@ -104,7 +105,10 @@ public class EventDao {
 				stmt.setString(5, eventToCreate.getNewFolderId());
 				stmt.setString(6, eventToCreate.getAttachmentsFolderId());
 				stmt.setString(7, eventToCreate.getClosedFolderId());
-				stmt.setString(8, eventToCreate.getSite_id());
+				
+				Site siteOfEvent = eventToCreate.getSite();
+				stmt.setInt(8, siteOfEvent.getID());
+				
 				stmt.setString(9, eventToCreate.getType());
 //				System.err.println("in getEventByUser with User id = " + user.getId());
 				int result = stmt.executeUpdate();
@@ -119,7 +123,7 @@ public class EventDao {
 				conn.close();
 			}
 		} catch (SQLException e1) {
-			System.err.println("connection error");
+			System.err.println("error :" + e1);
 		}
 		return lastInsertId;
 	}
