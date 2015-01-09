@@ -33,6 +33,7 @@
 <script src="/resources/js/jquery-1.11.1.min.js"></script>
 <script src="/resources/js/admin.js"></script>        
 <script type="text/javascript" src="/resources/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+<script src="/resources/js/angular-file-upload.js"></script>
 
 </head>
 
@@ -98,17 +99,37 @@
 				
 				<div class="form-group">
 					<label for="eventAddress">Event Mail Prefix</label>
-					<input type="text" class="form-control" id="eventAddress" ng-model="event.mail" placeholder="Event.Name" ng-blur="checkEventMail(event)"/><span>@<%= PropertiesManager.getProperty("domain") %></span>
+					<input type="text" class="form-control" id="eventAddress" ng-model="event.mail" placeholder="Event Mail" ng-blur="checkEventMail(event)"/><span>@<%= PropertiesManager.getProperty("domain") %></span>
 				</div>
 				
 				<div class="form-group">
 					<button type="submit" class="btn btn-default" ng-click="addEvt(event)">Submit</button>
 				</div>
-				
-				<div>
-					<br /> <br /> <a ng-href="/">Back to main page</a>
+
+				<div class="form-group">
+				<br /> <br />
+					<table style="width: 100%">
+						<tr>
+							<td width="50%"><label for="CSV-upload">Create Events through CSV file hosted in Drive</label></td>
+							<td width="50%">
+<!-- 								  <input ng-model="files" type="file" name="files" ng-file-select="onFileSelect($files)" ng-file-change="onFileSelect(files[0])"> -->
+<!-- 								  <div class="button" ng-file-select="onFileSelect($files)" data-multiple="false"></div> -->
+<!-- 								  <button ng-click="onFileSelect($files)">Action "onFileSelect"</button> -->
+										<button ng-click="processCsvFile()">Process CSV file</button>
+							</td>
+						</tr>
+					</table>
 				</div>
+
+				<div>
+					<br /> <br /><br /> <a ng-href="/">Back to main page</a>
+				</div>
+
+
+
 			</div>
+			
+			
 			<div class="col-md-6">
 			<table class="table table-striped" ng-show="users.length > 0">
 				<thead>

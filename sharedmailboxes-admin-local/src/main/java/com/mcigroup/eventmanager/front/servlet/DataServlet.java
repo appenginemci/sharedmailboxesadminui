@@ -109,6 +109,12 @@ public class DataServlet  extends HttpServlet {
 								PrintWriter out = resp.getWriter();
 								out.print(toReturn);
 								out.flush();
+							} else if ("processCsvFile".equals(type)) {
+								toReturn = DataManager.processCsvFile();
+								resp.setContentType("application/json");
+								PrintWriter out = resp.getWriter();
+								out.print(toReturn);
+								out.flush();
 							}  
 						}
 						
