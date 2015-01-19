@@ -19,6 +19,7 @@ import com.google.api.services.groupssettings.GroupssettingsScopes;
 import com.mcigroup.eventmanager.front.dao.DomainCredentialsDAO;
 import com.mcigroup.eventmanager.front.model.DomainCredentials;
 import com.mcigroup.eventmanager.front.model.security.GoogleCredentialItem;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
 
 public class CredentialLoader {
 	
@@ -43,6 +44,17 @@ public class CredentialLoader {
 			}
 				  
 		  return driveService;
+		}
+		
+		
+		    
+		public static SpreadsheetService getSpreadsheetService(){
+    		    SpreadsheetService spreadSheetService = new SpreadsheetService(
+    			    "MySpreadsheetIntegration-v1");
+    		    spreadSheetService.setProtocolVersion(SpreadsheetService.Versions.V3);
+    		    spreadSheetService.setOAuth2Credentials(googleCredentialItem.getGoogleCredential());
+		    
+		  return spreadSheetService;
 		}
 
 		public static Directory getDirectoryService(){
@@ -103,7 +115,7 @@ public class CredentialLoader {
 			scopes.addAll(getDirectoryScopes());
 			scopes.addAll(getDriveScopes());
 			scopes.addAll(getGroupssettingsScopes());
-			
+			scopes.add("https://spreadsheets.google.com/feeds");
 			return scopes;
 		}
 		

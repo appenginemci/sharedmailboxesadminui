@@ -33,7 +33,6 @@
 <script src="/resources/js/jquery-1.11.1.min.js"></script>
 <script src="/resources/js/admin.js"></script>        
 <script type="text/javascript" src="/resources/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-<script src="/resources/js/angular-file-upload.js"></script>
 
 </head>
 
@@ -110,12 +109,9 @@
 				<br /> <br />
 					<table style="width: 100%">
 						<tr>
-							<td width="50%"><label for="CSV-upload">Create Events through CSV file hosted in Drive</label></td>
+							<td width="50%"><label for="CSV-upload">Create Events through CSV file hosted in Google Drive, called: {{csvFileTitle}}</label></td>
 							<td width="50%">
-<!-- 								  <input ng-model="files" type="file" name="files" ng-file-select="onFileSelect($files)" ng-file-change="onFileSelect(files[0])"> -->
-<!-- 								  <div class="button" ng-file-select="onFileSelect($files)" data-multiple="false"></div> -->
-<!-- 								  <button ng-click="onFileSelect($files)">Action "onFileSelect"</button> -->
-										<button ng-click="processCsvFile()">Process CSV file</button>
+							<button ng-click="processCsvFile()">Process CSV file</button>
 							</td>
 						</tr>
 					</table>

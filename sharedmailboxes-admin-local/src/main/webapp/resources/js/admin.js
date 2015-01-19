@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ui.bootstrap', 'angularFileUpload']);
+var app = angular.module('myApp', ['ui.bootstrap']);
 
 app.factory("services", ['$http', function($http) {
     var obj = {};
@@ -66,7 +66,7 @@ app.controller('listCtrl', function($scope, $filter, services) {
 
 });
 
-app.controller('addEvt', function ($scope, $filter, services, $upload) {
+app.controller('addEvt', function ($scope, $filter, services) {
 	$scope.users = [];
 	$scope.alerts = [];
 	$scope.event = {};
@@ -87,6 +87,9 @@ app.controller('addEvt', function ($scope, $filter, services, $upload) {
     });
 	
 //	$scope.event.site = $scope.eventSites[0].folder_id;
+	
+//	$scope.csvFileTitle = PropertiesManager.getProperty("csvFileTitle");
+	$scope.csvFileTitle = 'createEventByCSV';
 	
 	$scope.userRoles = [
 	                          	{
@@ -128,57 +131,26 @@ app.controller('addEvt', function ($scope, $filter, services, $upload) {
 		});
 	}
 	
-	 $scope.onFileSelect = function($files) {
-		  console.log("In onFileSelect method");
-	    //$files: a single file, with name, size, and type.
-	      var file = $files;
-	      console.log("Reading the first file");
-	      console.log("Reading the name of the file: "+ file.name);
-	      $scope.upload = $upload.upload({
-	        url: 'server/upload/url', //upload.php script, node.js route, or servlet url
-	        //method: 'POST' or 'PUT',
-	        //headers: {'header-key': 'header-value'},
-	        //withCredentials: true,
-	        
-	        data: {myObj: $scope.myModelObj},
-	        file: file, // or list of files ($files) for html5 only
-	        //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s)
-	        // customize file formData name ('Content-Desposition'), server side file variable name. 
-	        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file' 
-	        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code
-	        //formDataAppender: function(formData, key, val){}
-	      }).progress(function(evt) {
-	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      }).success(function(data, status, headers, config) {
-	        // file is uploaded successfully
-	        console.log("file is uploaded successfully; here are the data :" + data);
-	      });
-	      //.error(...)
-	      //.then(success, error, progress); 
-	      // access or attach event listeners to the underlying XMLHttpRequest.
-	      //.xhr(function(xhr){xhr.upload.addEventListener(...)})
-	    /* alternative way of uploading, send the file binary with the file's content-type.
-	       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-	       It could also be used to monitor the progress of a normal http post/put request with large data*/
-	    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
-	  };
 	
 	  $scope.processCsvFile = function() {
-		  displayAlert('', ['CSV File perocess in progress']);
+		  displayAlert('', ['CSV File Process in progress']);
 		  console.log("Process CSV file method");
 			services.processCsvFile().success(function(data) {
 
-				console.log(data);
+			console.log(data);
+			
 			if(data.status == "failure") {
 				displayAlert('danger', data.messages);
-			} else if (data.status == "success") {
+			} else if (data == "correctEndOfTreatment") {
 				displayAlert('info', ['CSV file correctly processed']);
+				$scope.users = [];
+				$scope.event = {};
+			} else {
+				displayAlert('danger', [data]);
 				$scope.users = [];
 				$scope.event = {};
 			}
 		});
-
-
 		}
 	  
 	$scope.addUser = function() {

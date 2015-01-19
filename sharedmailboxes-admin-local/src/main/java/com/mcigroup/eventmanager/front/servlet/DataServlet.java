@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gdata.util.ServiceException;
 import com.mcigroup.eventmanager.front.business.DataManager;
 
 
@@ -110,7 +111,13 @@ public class DataServlet  extends HttpServlet {
 								out.print(toReturn);
 								out.flush();
 							} else if ("processCsvFile".equals(type)) {
-								toReturn = DataManager.processCsvFile();
+								try {
+								    toReturn = DataManager.processCsvFile();
+								}
+								catch (ServiceException e) {
+								    // TODO Auto-generated catch block
+								    e.printStackTrace();
+								}
 								resp.setContentType("application/json");
 								PrintWriter out = resp.getWriter();
 								out.print(toReturn);
