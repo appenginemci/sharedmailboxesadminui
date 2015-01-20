@@ -155,27 +155,30 @@ public class DataManager {
 		return EventCreationService.createEvent(eventToCreate);
 	}
 
-    public static <T> String processCsvFile() throws IOException, ServiceException {
-	System.err.println("In processCsvFile method in DataManager.java");
+	/**
+	 * This method is called directly by the JSP page, it gets the name of the input CSV from property file, then
+	 * transfer the call to the "process CSV" method
+	 * 
+	 * @return return a string containing the result of the process
+	 * @throws IOException
+	 * @throws ServiceException
+	 */
+	public static <T> String processCsvFile() throws IOException, ServiceException {
+		System.err.println("In processCsvFile method in DataManager.java");
 
-	try {
+		try {
+			String csvName = PropertiesManager.getProperty("csv_name");
+			String execReturn = SpreadSheetDAO.processCSVFile(csvName);
 
-	    
-	    String csvName = PropertiesManager.getProperty("csv_name");
-	    String execReturn = SpreadSheetDAO.processCSVFile(csvName);
-
-
-	    if (execReturn.equals("correctEndOfTreatment")) {
-		return "correctEndOfTreatment";
-	    }
-	    else {
-		return execReturn;
-	    }
+			if (execReturn.equals("correctEndOfTreatment")) {
+				return "correctEndOfTreatment";
+			} else {
+				return execReturn;
+			}
+		} catch (Exception e) {
+			return "technical error during CSV file processing; " + e.toString();
+		}
 	}
-	catch (Exception e) {
-	    return "technical error during CSV file processing";
-	}
-    }
 	
 	
 	public static<T> String getUsersForEventGroup(String groupId) {
