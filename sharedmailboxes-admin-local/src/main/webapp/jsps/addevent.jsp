@@ -120,9 +120,6 @@
 				<div>
 					<br /> <br /><br /> <a ng-href="/">Back to main page</a>
 				</div>
-
-
-
 			</div>
 			
 			

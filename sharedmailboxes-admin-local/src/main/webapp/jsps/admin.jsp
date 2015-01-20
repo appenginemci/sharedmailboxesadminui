@@ -55,8 +55,12 @@
 			<!-- /.navbar-collapse -->
   		</div><!-- /.container-fluid -->
 	</nav>
-	
-	
+
+	<div>
+		<a href="/add">Add Event</a>
+		<br /> <br />
+	</div>
+
 	<div id="tables">
 		<form action="/modify" id="listForm" name="listForm">
 		<table class="table table-condensed">
@@ -79,7 +83,6 @@
 		</table>
 		<input type="hidden" name="groupId" id="groupId"/>
 		</form>
-		<a href="/add">Add Event</a>
 	</div>
 
 </body>

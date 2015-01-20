@@ -306,7 +306,6 @@ public class SpreadSheetDAO {
 		    System.err.println("User role = " + userToCreate.getRole());
 		}
 		
-		//TODO GLA: don't forget to uncomment
 		String result = EventCreationService.createEvent(eventToCreate);
 		messages.add(result);
 	    }
