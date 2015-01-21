@@ -14,7 +14,7 @@ public class AuthorizationService {
 		
 //		if(DirectoryAPIService.isExistingGroup(groupEmailAddress)){
 //			if(DirectoryAPIService.isGroupMember(groupEmailAddress, userEmail)){
-		DirectoryAPIService.listGroup();
+//		DirectoryAPIService.listGroup();
 		if(DirectoryAPIService.isInDomainUser(userEmail)) {
 				userSession = new UserSession();
 				userSession.setEmail(userEmail);

@@ -75,20 +75,12 @@ public class CredentialLoader {
 			  GoogleCredential googleCredential = null;
 			  GoogleCredentialItem googleCredentialItem = null;
 			try {
-//				googleCredential = new GoogleCredential.Builder()
-//				      .setTransport(httpTransport)
-//				      .setJsonFactory(jsonFactory)
-//				      .setServiceAccountId(domainCredentials.getServiceAccountEmail())
-//				      .setServiceAccountScopes(scopes)
-//				      .setServiceAccountUser("nicolas.meunier@capgemini-sogeti.com")
-//				      .setServiceAccountPrivateKeyFromP12File(new File(CredentialLoader.class.getResource("/" + domainCredentials.getCertificatePath()).toURI()))
-//				      .build();
 				googleCredential = new GoogleCredential.Builder()
 			      .setTransport(httpTransport)
 			      .setJsonFactory(jsonFactory)
 			      .setServiceAccountId(domainCredentials.getServiceAccountEmail())
 			      .setServiceAccountScopes(scopes)
-			      .setServiceAccountUser("mci.project@demo.sogeti-reseller.com")
+			      .setServiceAccountUser(domainCredentials.getUserEmailAddress())
 			      .setServiceAccountPrivateKeyFromP12File(new File(CredentialLoader.class.getResource("/" + domainCredentials.getCertificatePath()).toURI()))
 			      .build();
 				

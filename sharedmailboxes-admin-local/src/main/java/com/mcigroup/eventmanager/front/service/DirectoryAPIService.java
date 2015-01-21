@@ -45,11 +45,11 @@ public class DirectoryAPIService {
 			com.google.api.services.admin.directory.Directory.Users.List userList = directory.users().list();
 			System.err.println("Domain = " + domain);
 			userList.setDomain(domain);
-			Users users = userList.execute();
-			System.err.println("Number of users = " + users.getUsers().size());
-			for(User user : users.getUsers()) {
-				System.err.println("user : " + user.getName());
-			}
+//			Users users = userList.execute();
+//			System.err.println("Number of users = " + users.getUsers().size());
+//			for(User user : users.getUsers()) {
+//				System.err.println("user : " + user.getName());
+//			}
 			User connected = directory.users().get(userEmail).execute();
 			if (connected != null) {
 				isDomainUser = true;
@@ -73,12 +73,18 @@ public class DirectoryAPIService {
 		try {
 			com.google.api.services.admin.directory.Directory.Users.List userList = directory.users().list();
 			userList.setDomain(domain);
-			Users users = userList.execute();
-			System.err.println("Number of users = " + users.getUsers().size());
-			for(User user : users.getUsers()) {
-				System.err.println("user : " + user.getName());
-				userEmails.add(user.getPrimaryEmail());
-			}
+			do {
+				Users users = userList.execute();
+				System.err.println("Number of users = " + users.getUsers().size());
+				for(User user : users.getUsers()) {
+//					System.err.println("user : " + user.getName());
+					userEmails.add(user.getPrimaryEmail());
+				}
+				userList.setPageToken(users.getNextPageToken());
+			} while (userList.getPageToken() != null &&
+					userList.getPageToken().length() > 0);
+			
+			
 		} catch (IOException e) {
 			System.err.println("error while retrieving all users");
 		}
@@ -129,9 +135,9 @@ public class DirectoryAPIService {
 			groupsList.setDomain(domain);
 			Groups groups = groupsList.execute();
 			System.err.println("Number of groups = " + groups.getGroups().size());
-			for(Group group : groups.getGroups()) {
-				System.err.println("Group email = " + group.getEmail());
-			}
+//			for(Group group : groups.getGroups()) {
+//				System.err.println("Group email = " + group.getEmail());
+//			}
 		} catch (IOException e) {
 			System.err.println("Error while retrieving groups");
 			e.printStackTrace();
@@ -150,13 +156,20 @@ public class DirectoryAPIService {
 		try {
 			groupsList = directory.groups().list();
 			groupsList.setDomain(domain);
-			Groups groups = groupsList.execute();
-			//System.err.println("Number of groups = " + groups.getGroups().size());
-			for(Group group : groups.getGroups()) {
-				if(group.getName().equalsIgnoreCase(eventName)) {
-					return Tools.gson.toJson(false);
+			do {
+				Groups groups = groupsList.execute();
+				//System.err.println("Number of groups = " + groups.getGroups().size());
+				for(Group group : groups.getGroups()) {
+					if(group.getName().equalsIgnoreCase(eventName)) {
+						return Tools.gson.toJson(false);
+					}
 				}
-			}
+				
+				groupsList.setPageToken(groups.getNextPageToken());
+			} while (groupsList.getPageToken() != null &&
+					groupsList.getPageToken().length() > 0);
+			
+			
 			return Tools.gson.toJson(true);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -177,13 +190,21 @@ public class DirectoryAPIService {
 		try {
 			groupsList = directory.groups().list();
 			groupsList.setDomain(domain);
-			Groups groups = groupsList.execute();
-			//System.err.println("Number of groups = " + groups.getGroups().size());
-			for(Group group : groups.getGroups()) {
-				if(group.getEmail().toLowerCase().startsWith(eventMailPrefix.toLowerCase())) {
-					return Tools.gson.toJson(false);
+			
+			do {
+				Groups groups = groupsList.execute();
+				//System.err.println("Number of groups = " + groups.getGroups().size());
+				for(Group group : groups.getGroups()) {
+					if(group.getEmail().toLowerCase().startsWith(eventMailPrefix.toLowerCase())) {
+						return Tools.gson.toJson(false);
+					}
 				}
-			}
+				
+				groupsList.setPageToken(groups.getNextPageToken());
+			} while (groupsList.getPageToken() != null &&
+					groupsList.getPageToken().length() > 0);
+			
+			
 			return Tools.gson.toJson(true);
 		} catch (IOException e) {
 			e.printStackTrace();
